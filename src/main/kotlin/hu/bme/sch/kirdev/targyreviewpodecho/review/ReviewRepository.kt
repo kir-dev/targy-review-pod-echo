@@ -1,7 +1,5 @@
-package hu.bme.sch.kirdev.targyreviewpodecho.repository
+package hu.bme.sch.kirdev.targyreviewpodecho.review
 
-import hu.bme.sch.kirdev.targyreviewpodecho.model.Review
-import hu.bme.sch.kirdev.targyreviewpodecho.model.ReviewTargetType
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 

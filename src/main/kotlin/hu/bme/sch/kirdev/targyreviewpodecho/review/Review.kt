@@ -1,4 +1,4 @@
-package hu.bme.sch.kirdev.targyreviewpodecho.model
+package hu.bme.sch.kirdev.targyreviewpodecho.review
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -46,3 +46,11 @@ class Review(
     @Column(nullable = false)
     var anonymous: Boolean = false,
 )
+
+/**
+ * Megadja, hogy egy Review mire vonatkozik: egy tárgyra vagy egy oktatóra.
+ */
+enum class ReviewTargetType {
+    SUBJECT,
+    LECTURER,
+}

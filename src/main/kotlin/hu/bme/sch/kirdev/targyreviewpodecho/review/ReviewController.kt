@@ -7,23 +7,32 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/review")
-class ReviewController (private val reviewService: ReviewService)
-    {
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    fun create(@RequestBody dto: ReviewDto): ReviewDto = reviewService.create(dto)
+class ReviewController (private val reviewService: ReviewService) {
 
-    @GetMapping("/{id}")
+    @PostMapping("/subject/{id}/reviews")
+    @ResponseStatus(HttpStatus.CREATED)
+    fun createForSubject(
+        @PathVariable id: Long,
+        @RequestBody dto: CreateReviewDto
+    ): ReviewDto = reviewService.create(dto, ReviewTargetType.SUBJECT, id)
+
+    @PostMapping("/lecturer/{id}/reviews")
+    @ResponseStatus(HttpStatus.CREATED)
+    fun createForLecturer(
+        @PathVariable id: Long,
+        @RequestBody dto: CreateReviewDto
+    ): ReviewDto = reviewService.create(dto, ReviewTargetType.LECTURER, id)
+
+
+    @GetMapping("/review/{id}")
     fun getById(@PathVariable id: Long): ReviewDto = reviewService.getById(id)
 
-    @GetMapping
+    @GetMapping("/review")
     fun list(
         @RequestParam(required = false) targetType: ReviewTargetType?,
         @RequestParam(required = false) targetId: Long?,
@@ -37,13 +46,13 @@ class ReviewController (private val reviewService: ReviewService)
             emptyList()
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/review/{id}")
     fun update(@PathVariable id: Long, @RequestBody dto: ReviewDto): ReviewDto =
         reviewService.update(id, dto)
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/review/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun delete(@PathVariable id: Long) =
         reviewService.delete(id)
 
-    }
+}

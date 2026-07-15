@@ -21,6 +21,7 @@ class SubjectEntity (
     @Enumerated(EnumType.STRING)
     var major: MajorType? = null,
 
+    @NotBlank
     @Column(unique = true, nullable = false)
     var bmeId: String = "",
 

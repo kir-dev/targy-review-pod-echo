@@ -37,6 +37,6 @@ class SubjectService(private val subjectRepository: SubjectRepository, private v
     @Transactional(readOnly = true)
     fun getAllSubjects(): List<SubjectDto> {
         val subjects = subjectRepository.findAll()
-        return subjects.stream().map{ subject -> subjectMapper.entityToDto(subject)}.toList()
+        return subjects.map{ subject -> subjectMapper.entityToDto(subject)}
     }
 }

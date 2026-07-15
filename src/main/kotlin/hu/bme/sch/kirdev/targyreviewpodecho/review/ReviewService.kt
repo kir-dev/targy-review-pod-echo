@@ -1,5 +1,6 @@
 package hu.bme.sch.kirdev.targyreviewpodecho.review
 
+import jakarta.persistence.EntityNotFoundException
 import org.springframework.stereotype.Service
 
 @Service
@@ -11,7 +12,9 @@ class ReviewService (
 ){
     fun create(dto: CreateReviewDto, targetType: ReviewTargetType, targetId: Long): ReviewDto {
 
-        validateTargetExists(targetType, targetId)
+        if(!validateTargetExists(targetType, targetId)){
+            throw EntityNotFoundException("Target type $targetType with id $targetId not found")
+        }
 
         val entity = Review(
             comment = dto.comment,
@@ -28,23 +31,17 @@ class ReviewService (
         return ReviewDto(saved)
     }
 
-    private fun validateTargetExists(
-        targetType: ReviewTargetType,
-        targetId: Long
-    ) {
+    private fun validateTargetExists(targetType: ReviewTargetType,targetId: Long): Boolean {
         // TODO: implement when Subject and Lecturer repositories are available
-        /*val exists = when (targetType) {
+        /*return when (targetType) {
             ReviewTargetType.SUBJECT -> subjectRepository.existsById(targetId)
             ReviewTargetType.LECTURER -> lecturerRepository.existsById(targetId)
-        }
-        if (!exists) {
-            throw NoSuchElementException("$targetType with id $targetId not found")
         }*/
-
+        return true
     }
 
     fun getById(id: Long): ReviewDto {
-        val entity = reviewRepository.findById(id).orElseThrow { NoSuchElementException("Review not found: $id") }
+        val entity = reviewRepository.findById(id).orElseThrow { EntityNotFoundException("Review not found: $id") }
         return ReviewDto(entity)
     }
 
@@ -57,10 +54,10 @@ class ReviewService (
             .map { ReviewDto(it) }
 
     fun update(id: Long, dto: ReviewDto): ReviewDto {
-        val entity = reviewRepository.findById(id).orElseThrow { NoSuchElementException("Review not found: $id") }
+        val entity = reviewRepository.findById(id).orElseThrow { EntityNotFoundException("Review not found: $id") }
 
         if (dto.targetType != entity.targetType || dto.targetId != entity.targetId) {
-            throw IllegalArgumentException("Cannot change review target")
+            throw EntityNotFoundException("Cannot change review target")
         }
 
         updateEntityFromDto(entity, dto)
@@ -70,7 +67,7 @@ class ReviewService (
 
     fun delete(id: Long) {
         if(!reviewRepository.existsById(id)) {
-            throw NoSuchElementException("Review not found: $id")
+            throw EntityNotFoundException("Review not found: $id")
         }
         reviewRepository.deleteById(id)
     }

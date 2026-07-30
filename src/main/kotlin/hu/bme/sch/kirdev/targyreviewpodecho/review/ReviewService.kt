@@ -1,6 +1,4 @@
 package hu.bme.sch.kirdev.targyreviewpodecho.review
-
-import jakarta.persistence.EntityNotFoundException
 import org.springframework.stereotype.Service
 
 @Service
@@ -10,10 +8,10 @@ class ReviewService (
     //private val subjectRepository: SubjectRepository,
     //private val lecturerRepository: LecturerRepository,
 ){
-    fun create(dto: CreateReviewDto, targetType: ReviewTargetType, targetId: Long): ReviewDto {
+    fun create(dto: CreateReviewDto, targetType: ReviewTargetType, targetId: Long): ReviewDto? {
 
         if(!validateTargetExists(targetType, targetId)){
-            throw EntityNotFoundException("Target type $targetType with id $targetId not found")
+            return null
         }
 
         val entity = Review(
@@ -40,8 +38,8 @@ class ReviewService (
         return true
     }
 
-    fun getById(id: Long): ReviewDto {
-        val entity = reviewRepository.findById(id).orElseThrow { EntityNotFoundException("Review not found: $id") }
+    fun getById(id: Long): ReviewDto? {
+        val entity = reviewRepository.findById(id).orElse(null) ?: return null
         return ReviewDto(entity)
     }
 
@@ -53,11 +51,11 @@ class ReviewService (
             reviewRepository.findByPosterId(posterId)
             .map { ReviewDto(it) }
 
-    fun update(id: Long, dto: ReviewDto): ReviewDto {
-        val entity = reviewRepository.findById(id).orElseThrow { EntityNotFoundException("Review not found: $id") }
+    fun update(id: Long, dto: ReviewDto): ReviewDto? {
+        val entity = reviewRepository.findById(id).orElse(null) ?: return null
 
         if (dto.targetType != entity.targetType || dto.targetId != entity.targetId) {
-            throw EntityNotFoundException("Cannot change review target")
+            return null
         }
 
         updateEntityFromDto(entity, dto)
@@ -65,11 +63,12 @@ class ReviewService (
         return ReviewDto(saved)
     }
 
-    fun delete(id: Long) {
+    fun delete(id: Long): Boolean{
         if(!reviewRepository.existsById(id)) {
-            throw EntityNotFoundException("Review not found: $id")
+            return false
         }
         reviewRepository.deleteById(id)
+        return true
     }
 
     private fun updateEntityFromDto(entity: Review, dto: ReviewDto) {

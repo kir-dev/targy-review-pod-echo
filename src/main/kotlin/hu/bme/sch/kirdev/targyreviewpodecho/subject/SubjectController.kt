@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/subjects")
-@CrossOrigin("*")
 class SubjectController(private val subjectService: SubjectService) {
 
     @GetMapping

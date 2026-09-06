@@ -10,8 +10,8 @@ class SubjectService(private val subjectRepository: SubjectRepository, private v
     @Transactional
     fun createSubject(subject: SubjectDto) : SubjectDto{
         val subjectEntity = subjectMapper.dtoToEntity(subject)
-        subjectRepository.save(subjectEntity)
-        return subjectMapper.entityToDto(subjectEntity)
+        val savedEntity = subjectRepository.save(subjectEntity)
+        return subjectMapper.entityToDto(savedEntity)
     }
 
     @Transactional

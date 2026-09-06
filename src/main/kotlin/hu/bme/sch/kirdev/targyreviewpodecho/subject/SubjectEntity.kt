@@ -2,7 +2,6 @@ package hu.bme.sch.kirdev.targyreviewpodecho.subject
 
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotBlank
-import jakarta.validation.constraints.NotNull
 
 @Entity
 @Table(name = "subject")
@@ -16,8 +15,7 @@ class SubjectEntity (
 
     @Column(nullable = false)
     var semester: Int = 0,
-
-    @NotNull
+    
     @Enumerated(EnumType.STRING)
     var major: MajorType? = null,
 

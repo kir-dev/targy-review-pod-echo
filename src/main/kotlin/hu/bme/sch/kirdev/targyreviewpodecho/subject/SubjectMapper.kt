@@ -1,5 +1,8 @@
 package hu.bme.sch.kirdev.targyreviewpodecho.subject
 
+import org.springframework.stereotype.Component
+
+@Component
 class SubjectMapper {
     fun entityToDto(entity: SubjectEntity): SubjectDto {
         return SubjectDto(

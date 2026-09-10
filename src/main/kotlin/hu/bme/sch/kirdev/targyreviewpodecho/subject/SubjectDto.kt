@@ -7,7 +7,7 @@ data class SubjectDto (
 
     var semester: Int = 0,
 
-    var major: MajorType = MajorType.MERNOK_INFO,
+    var major: MajorType? = null,
 
     var bmeId: String = "",
 

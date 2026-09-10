@@ -15,10 +15,11 @@ class SubjectEntity (
 
     @Column(nullable = false)
     var semester: Int = 0,
-
+    
     @Enumerated(EnumType.STRING)
-    var major: MajorType = MajorType.MERNOK_INFO,
+    var major: MajorType? = null,
 
+    @NotBlank
     @Column(unique = true, nullable = false)
     var bmeId: String = "",
 
